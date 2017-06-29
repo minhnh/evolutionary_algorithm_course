@@ -3,8 +3,8 @@ function fitness = GetFitness(genomes, targetFitness, Constraints)
     fitness = zeros(length(genomes), 1);
     networkFunction = Constraints.NetworkFunction;
     parfor i = 1: length(genomes)
-        connectionMatrix = NEAT.GetConnectionMatrix(genomes(i).ConnectionGene,...
-                                                    size(genomes(i).NodeGene, 2));
+        connectionMatrix = NEAT.GetConnectionMatrix(genomes(i).ConnectionGenes,...
+                                                    size(genomes(i).NodeGenes, 2));
         fitness(i) = twoPole_test(connectionMatrix, networkFunction, targetFitness);
     end
 end

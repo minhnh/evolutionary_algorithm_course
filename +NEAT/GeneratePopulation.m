@@ -3,10 +3,10 @@ function GeneratePopulation(obj, populationSize, ~, constraints)
 %   Expected field in Constraints:
 %   - InputDim: problem input dimension, number of input neurons
 %   - OutputDim: problem output dimension, number of output neurons
-%   NodeGene is an array of dimension 2 rows * (InputDim + OutputDim + 1(bias)):
+%   NodeGenes is an array of dimension 2 rows * (InputDim + OutputDim + 1(bias)):
 %   - row 1: node ID
 %   - row 2: node type
-%   ConnectionGene is an array of dimension 5 rows * number of connections:
+%   ConnectionGenes is an array of dimension 5 rows * number of connections:
 %   - row 1: innovation number
 %   - row 2: connection from
 %   - row 3: connection to
@@ -29,10 +29,13 @@ function GeneratePopulation(obj, populationSize, ~, constraints)
     nodeTypeRow = [NEAT.NodeTypes.INPUT * ones(1, constraints.InputDim, 'uint8'),...
                    NEAT.NodeTypes.BIAS * 1,...
                    NEAT.NodeTypes.OUTPUT * ones(1, constraints.OutputDim, 'uint8')];
-    % generate random number of connections for each individual
-    numConnectionsList = randi([1, constraints.InputDim], populationSize, 1);
-    baseGenome = struct('NodeGene', [1:numNode; nodeTypeRow],...
-                        'ConnectionGene', zeros(5, max(numConnectionsList)));
+    % generate random number of connections for each individual, minimum half
+    % of inputs are connected
+    numConnectionsMin = max(1, int32(constraints.InputDim / 2));
+    numConnectionsList = randi([numConnectionsMin, constraints.InputDim],...
+                               populationSize, 1);
+    baseGenome = struct('NodeGenes', [1:numNode; nodeTypeRow],...
+                        'ConnectionGenes', zeros(5, max(numConnectionsList)));
     population = repmat(baseGenome, populationSize, 1);
     innovationRecordDict = containers.Map();
 
@@ -62,10 +65,10 @@ function GeneratePopulation(obj, populationSize, ~, constraints)
             end
             innovationNumbers(connectionIndex) = innovationRecordDict(innovationKey);
         end
-        population(i).ConnectionGene = [innovationNumbers;
-                                        connectionMatrix;
-                                        rand(1, numConnections) * 2 - 1;
-                                        ones(1, numConnections)];
+        population(i).ConnectionGenes = [innovationNumbers;
+                                         connectionMatrix;
+                                         rand(1, numConnections) * 2 - 1;
+                                         ones(1, numConnections)];
     end
     innovationRecord = [1:innovationRecordDict.Count;
                         zeros(4, innovationRecordDict.Count)];
