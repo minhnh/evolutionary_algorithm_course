@@ -8,7 +8,7 @@ VERBOSE = false;
 ELITISM = false;        %TODO:?
 NUM_ITERATION = 50;
 NUM_TRIES = 20;
-NUM_GENE = -1;          % dependent on network topology
+NUM_GENE = 16;          % dependent on network topology
 TARGET = 1000;          % target: simulation runs for 1000 time steps
 
 CONSTRAINTS = struct('InputDim', 6,...
