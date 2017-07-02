@@ -20,8 +20,10 @@ NUM_GENE = numCities;
 %% Initialize population
 ie = GeneticEncoding.PermutationEncoding(POPULATION_SIZE, NUM_GENE, TARGET, CONSTRAINTS,...
                                          @GeneratePopulation, @GetFitness,...
-                                         @SelectWinners, @RandomCrossover,...
-                                         @MutateOrderChange, @CheckConvergence,...
+                                         @SelectWinners,...
+                                         @GeneticEncoding.IntegerOperators.RandomCrossover,...
+                                         @GeneticEncoding.IntegerOperators.MutateOrderChange,...
+                                         @CheckConvergence,...
                                          VERBOSE);
 population = ie.Population;
 % start timer
@@ -46,7 +48,7 @@ toc
 % RandomCrossover & MutateSwitchNeighbor
 bestFitness2 = zeros(NUM_TRIES, NUM_ITERATION + 1);
 bestChildren2 = zeros(NUM_TRIES, NUM_GENE);
-set(ie, 'funcMutate', @MutateSwitchNeighbor)
+set(ie, 'funcMutate', @GeneticEncoding.IntegerOperators.MutateSwitchNeighbor)
 parfor i = 1:NUM_TRIES
     set(ie, 'Population', population);
     [bestFitness, ~, ~] = ie.Iterate(NUM_ITERATION, ELITISM, 0.9, 0.02);
@@ -63,7 +65,7 @@ toc
 % CycleCrossover & MutateSwitchNeighbor
 bestFitness3 = zeros(NUM_TRIES, NUM_ITERATION + 1);
 bestChildren3 = zeros(NUM_TRIES, NUM_GENE);
-set(ie, 'funcSingleCrossover', @CycleCrossover)
+set(ie, 'funcSingleCrossover', @GeneticEncoding.IntegerOperators.CycleCrossover)
 parfor i = 1:NUM_TRIES
     set(ie, 'Population', population);
     [bestFitness, ~, ~] = ie.Iterate(NUM_ITERATION, ELITISM, 0.9, 0.02);
@@ -80,7 +82,7 @@ toc
 % CycleCrossover & MutateOrderChange
 bestFitness4 = zeros(NUM_TRIES, NUM_ITERATION + 1);
 bestChildren4 = zeros(NUM_TRIES, NUM_GENE);
-set(ie, 'funcMutate', @MutateOrderChange)
+set(ie, 'funcMutate', @GeneticEncoding.IntegerOperators.MutateOrderChange)
 parfor i = 1:NUM_TRIES
     set(ie, 'Population', population);
     [bestFitness, ~, ~] = ie.Iterate(NUM_ITERATION, ELITISM, 0.9, 0.02);
@@ -123,94 +125,6 @@ function winners = SelectWinners(obj, selection_size)
         [~, maxArg] = max(fitness);
         winners(i, :) = parents(maxArg, :);
     end
-end
-
-function children = MutateOrderChange(children, mutationRate)
-    mutationMatrix = rand(size(children)) < mutationRate;
-    numGenome = size(children, 1);
-    numGene = size(children, 2);
-    numSwap = sum(mutationMatrix, 2);
-    for i = 1 : numGenome
-        if numSwap(i) == 0
-            continue;
-        end
-        for j = 1 : numGene
-            if ~mutationMatrix(i, j)
-                continue;
-            end
-            swapIndex = randi(numGene);
-            swapTemp = children(i, swapIndex);
-            children(i, swapIndex) = children(i, j);
-            children(i, j) = swapTemp;
-        end
-    end
-end
-
-function children = MutateSwitchNeighbor(children, mutationRate)
-    mutationMatrix = rand(size(children)) < mutationRate;
-    numGenome = size(children, 1);
-    numGene = size(children, 2);
-    numSwap = sum(mutationMatrix, 2);
-    for i = 1 : numGenome
-        if numSwap(i) == 0
-            continue;
-        end
-        for j = 1 : numGene
-            if ~mutationMatrix(i, j)
-                continue;
-            end
-            if j == numGene
-                swapIndex = 1;
-            else
-                swapIndex = j + 1;
-            end
-            swapTemp = children(i, swapIndex);
-            children(i, swapIndex) = children(i, j);
-            children(i, j) = swapTemp;
-        end
-    end
-end
-
-function child = SinglePointCrossover(parents)
-    numGene = size(parents, 2);
-    midPoint = int16(numGene / 2);
-    child = -ones(1, numGene);
-    child(1 : midPoint) = parents(1, 1 : midPoint);
-    parent2 = parents(2, :);
-    child(midPoint + 1 : numGene) = parent2(~ismember(parent2, child));
-end
-
-function child = RandomCrossover(parents)
-    numGene = size(parents, 2);
-    numChange = int16(numGene / 2);
-    child = -ones(1, numGene);
-    changeIndices = randperm(numGene, numChange);
-    child(changeIndices) = parents(1, changeIndices);
-    child(child == -1) = parents(2, ~ismember(parents(2, :), child));
-end
-
-function child = CycleCrossover(parents)
-    numGene = size(parents, 2);
-    cycleStart = 1;
-    child = -ones(1, numGene);
-    parentIndex = 0;
-    while sum(ismember(child, -1)) > 0
-        currentCycle = cycleStart;
-        cycleEnd = cycleStart;
-        while ~(parents(2, cycleEnd) == parents(1, cycleStart))
-            parent2CycleEndValue = parents(2, cycleEnd);
-            cycleEnd = find(ismember(parents(1, :), parent2CycleEndValue));
-            currentCycle = [currentCycle, cycleEnd];
-        end
-        child(currentCycle) = parents(parentIndex + 1, currentCycle);
-        parentIndex = ~parentIndex;
-        for cycleStart = 1:numGene
-            if child(cycleStart) == -1
-                break;
-            end
-        end
-    end
-    child(child == -1) = parents(2, ~ismember(parents(2, :), child));
 end
 
 function converging = CheckConvergence(~)
