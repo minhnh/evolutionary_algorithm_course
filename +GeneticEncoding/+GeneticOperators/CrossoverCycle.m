@@ -1,4 +1,4 @@
-function child = CycleCrossover(parents)
+function child = CrossoverCycle(parents)
     numGene = size(parents, 2);
     cycleStart = 1;
     child = -ones(1, numGene);
