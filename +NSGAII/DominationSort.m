@@ -32,8 +32,8 @@ while ~isempty(currentFront)
     for p = currentFront
         lestFitSet = genomesWithRanks(p).lestFitSet;
         for q = lestFitSet
-            moreFitCount = genomesWithRanks(q).moreFitCount;
-            if moreFitCount == 1
+            genomesWithRanks(q).moreFitCount = genomesWithRanks(q).moreFitCount - 1;
+            if genomesWithRanks(q).moreFitCount == 0
                 genomesWithRanks(q).rank = i + 1;
                 nextFront = [nextFront, q];
             end
