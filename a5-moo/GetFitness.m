@@ -1,4 +1,4 @@
-function fitness = GetFitness(genomes, targetFitness, Constraints)
+function fitness = GetFitness(genomes, ~, ~)
 %GETFITNESS Summary of this function goes here
 %   Detailed explanation goes here
     numGenome = length(genomes);

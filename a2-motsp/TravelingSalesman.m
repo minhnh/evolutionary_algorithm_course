@@ -21,8 +21,8 @@ NUM_GENE = numCities;
 ie = GeneticEncoding.PermutationEncoding(POPULATION_SIZE, NUM_GENE, TARGET, CONSTRAINTS,...
                                          @GeneratePopulation, @GetFitness,...
                                          @SelectWinners,...
-                                         @GeneticEncoding.GeneticOperators.CrossoverRandPerm,...
-                                         @GeneticEncoding.GeneticOperators.MutateOrderChange,...
+                                         @GeneticEncoding.PermutationOperators.CrossoverRandPerm,...
+                                         @GeneticEncoding.PermutationOperators.MutateOrderChange,...
                                          @CheckConvergence,...
                                          VERBOSE);
 population = ie.Population;
@@ -48,7 +48,7 @@ toc
 % RandomCrossover & MutateSwitchNeighbor
 bestFitness2 = zeros(NUM_TRIES, NUM_ITERATION + 1);
 bestChildren2 = zeros(NUM_TRIES, NUM_GENE);
-set(ie, 'funcMutate', @GeneticEncoding.GeneticOperators.MutateSwitchNeighbor)
+set(ie, 'funcMutate', @GeneticEncoding.PermutationOperators.MutateSwitchNeighbor)
 parfor i = 1:NUM_TRIES
     set(ie, 'Population', population);
     [bestFitness, ~, ~] = ie.Iterate(NUM_ITERATION, ELITISM, 0.9, 0.02);
@@ -65,7 +65,7 @@ toc
 % CycleCrossover & MutateSwitchNeighbor
 bestFitness3 = zeros(NUM_TRIES, NUM_ITERATION + 1);
 bestChildren3 = zeros(NUM_TRIES, NUM_GENE);
-set(ie, 'funcSingleCrossover', @GeneticEncoding.GeneticOperators.CrossoverCycle)
+set(ie, 'funcSingleCrossover', @GeneticEncoding.PermutationOperators.CrossoverCycle)
 parfor i = 1:NUM_TRIES
     set(ie, 'Population', population);
     [bestFitness, ~, ~] = ie.Iterate(NUM_ITERATION, ELITISM, 0.9, 0.02);
@@ -82,7 +82,7 @@ toc
 % CycleCrossover & MutateOrderChange
 bestFitness4 = zeros(NUM_TRIES, NUM_ITERATION + 1);
 bestChildren4 = zeros(NUM_TRIES, NUM_GENE);
-set(ie, 'funcMutate', @GeneticEncoding.GeneticOperators.MutateOrderChange)
+set(ie, 'funcMutate', @GeneticEncoding.PermutationOperators.MutateOrderChange)
 parfor i = 1:NUM_TRIES
     set(ie, 'Population', population);
     [bestFitness, ~, ~] = ie.Iterate(NUM_ITERATION, ELITISM, 0.9, 0.02);
