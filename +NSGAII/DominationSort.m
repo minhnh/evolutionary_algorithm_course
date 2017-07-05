@@ -17,8 +17,7 @@ for p = 1:numGenome
     end
     if moreFitCount == 0
         bestFront = [bestFront, p];
-    end
-    if moreFitCount == 1
+        genomesWithRanks(p).rank = 1;
     end
     genomesWithRanks(p).lestFitSet = lestFitSet;
     genomesWithRanks(p).moreFitCount = moreFitCount;
