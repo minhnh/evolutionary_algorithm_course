@@ -1,4 +1,4 @@
-function genomesWithRanks = crowdingDistance(genomesWithRanks, currentFront, objectiveNames)
+function genomesWithRanks = CrowdingDistance(genomesWithRanks, currentFront, objectiveNames)
 
 frontSize = length(currentFront);
 population = genomesWithRanks;

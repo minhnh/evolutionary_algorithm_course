@@ -22,7 +22,7 @@ if isfield(obj.Constraints, 'oldPopulation')
         end
     end
     currentFront = fronts{i};
-    genomesWithRanks = crowdingDistance(genomesWithRanks, currentFront,...
+    genomesWithRanks = NSGAII.CrowdingDistance(genomesWithRanks, currentFront,...
                                         obj.Constraints.objectiveNames);
     % Sorting based on partial order
     currentFront =  partialOrderSort(currentFront, genomesWithRanks);
