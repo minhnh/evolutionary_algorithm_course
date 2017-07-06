@@ -6,7 +6,7 @@ clear;clc;clf;
 POPULATION_SIZE = 50;
 VERBOSE = false;
 ELITISM = false;        %TODO:?
-NUM_ITERATION = 100;
+NUM_ITERATION = 200;
 NUM_TRIES = 20;
 NUM_GENE = 16;          % dependent on network topology
 TARGET = NUM_GENE;          % target: simulation runs for 1000 time steps
@@ -24,7 +24,7 @@ ie = GeneticEncoding.ValueEncoding(POPULATION_SIZE, NUM_GENE, TARGET, CONSTRAINT
                                    VERBOSE);
 fig = figure(1);
 axis([0 NUM_GENE 0 NUM_GENE]);
-Visualization.gif('front_evolution.gif', 'frame', fig, 'DelayTime', 0.2);
+Visualization.gif('front_evolution.gif', 'frame', fig, 'DelayTime', 0.5);
 Visualization.SetupPlot('Front evolutions', 'Number of leading zeros', 'number of trailing ones', 24, []);
 
 % set(gcf, 'position', [0 0 1.5 1.5]);

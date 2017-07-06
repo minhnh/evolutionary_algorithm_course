@@ -1,10 +1,15 @@
-function fitness = GetFitness(genomes, ~, ~)
+function fitness = GetFitness(genomes, ~, constraints)
 %GETFITNESS Summary of this function goes here
 %   Detailed explanation goes here
     numGenome = length(genomes);
     fitness = zeros(numGenome, 1);
-    parfor i = 1:numGenome
-        fitness(i) = genomes(i).numLeadingZeros + genomes(i).numTrailingOnes;
+    for i = 1:numGenome
+        currentFitness = 0;
+        for j = 1:length(constraints.objectiveFunctions)
+            objectiveFunc = constraints.objectiveFunctions{j};
+            currentFitness = currentFitness + objectiveFunc(genomes(i).Genome);
+        end
+        fitness(i) = currentFitness;
     end
 end
 

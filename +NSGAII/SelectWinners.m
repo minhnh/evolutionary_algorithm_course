@@ -2,8 +2,8 @@ function winners = SelectWinners(obj, selection_size)
 %SELECTWINNERS Summary of this function goes here
 %   Detailed explanation goes here
 offsprings = NSGAII.CalculateObjectives(obj.Population, obj.Constraints.objectiveNames,...
-    obj.Constraints.objectiveFunctions);
-winners = obj.Population;
+                                        obj.Constraints.objectiveFunctions);
+winners = offsprings;
 if isfield(obj.Constraints, 'oldPopulation')
     [fronts, genomesWithRanks] = NSGAII.DominationSort([offsprings; obj.Constraints.oldPopulation],...
                                                        obj.Constraints.objectiveNames);
@@ -23,7 +23,7 @@ if isfield(obj.Constraints, 'oldPopulation')
     end
     currentFront = fronts{i};
     genomesWithRanks = NSGAII.CrowdingDistance(genomesWithRanks, currentFront,...
-                                        obj.Constraints.objectiveNames);
+                                               obj.Constraints.objectiveNames);
     % Sorting based on partial order
     currentFront =  partialOrderSort(currentFront, genomesWithRanks);
 
@@ -37,9 +37,8 @@ if isfield(obj.Constraints, 'oldPopulation')
 
     Visualization.VisualizeFronts2D(genomesWithRanks, fronts, selectedIndices,...
                                     obj.Constraints.objectiveNames);
-else
-    obj.Constraints.oldPopulation = obj.Population;
 end
+obj.Constraints.oldPopulation = offsprings;
 
 end
 
