@@ -2,7 +2,7 @@
 % Author:   Minh Nguyen
 % Date:     2017-06-01
 %%
-clear;clc;
+clear;clc;clf;
 POPULATION_SIZE = 50;
 VERBOSE = false;
 ELITISM = false;        %TODO:?
@@ -23,10 +23,12 @@ ie = GeneticEncoding.ValueEncoding(POPULATION_SIZE, NUM_GENE, TARGET, CONSTRAINT
                                    @NSGAII.GeneratePopulation, @GetFitness,...
                                    @SelectWinners, @Crossover, @Mutate, @CheckConvergence,...
                                    VERBOSE);
-Visualization.gif('front_evolution.gif');
-Visualization.SetupPlot('Front evolutions', 'Number of leading zeros', 'number of trailing ones', 24, []);
+fig = figure(1);
 axis([0 16 0 16]);
-set(gcf, 'position', [0 0 1.5 1.5]);
+Visualization.gif('front_evolution.gif', 'frame', fig);
+Visualization.SetupPlot('Front evolutions', 'Number of leading zeros', 'number of trailing ones', 24, []);
+
+% set(gcf, 'position', [0 0 1.5 1.5]);
 fitnessInit = GetFitness(ie.Population, TARGET, ie.Constraints);
 ie.Iterate(NUM_ITERATION, ELITISM, CROSSOVER_PARAMS, MUTATION_RATE);
 fitnessFinal = GetFitness(ie.Population, TARGET, ie.Constraints);

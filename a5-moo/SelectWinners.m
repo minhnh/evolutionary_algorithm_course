@@ -7,7 +7,7 @@ winners = obj.Population;
 if isfield(obj.Constraints, 'oldPopulation')
     [ fronts, genomesWithRanks ] = NSGAII.DominationSort( [offsprings; obj.Constraints.oldPopulation] );
     Visualization.VisualizeFronts2D(genomesWithRanks, fronts, obj.Constraints.objectiveNames);
-    Visualization.gif('frame', gcf);
+    Visualization.gif;
     winID = 1;
     for j = 1:length(fronts)
         currentFront = fronts{j};
