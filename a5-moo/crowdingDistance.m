@@ -13,7 +13,6 @@ for nObj = 1:numObjectives
     currentObjectiveName = objectiveNames{nObj};
     sortedFront =  sortByObjective(population(currentFront), currentObjectiveName);
     [sortedFront(1).dist, sortedFront(frontSize).dist] = deal(inf);
-    
     for j = 2:frontSize-1
         sortedFront(j).dist = population(j).dist...
                               + (sortedFront(j-1).(currentObjectiveName)...

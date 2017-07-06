@@ -8,7 +8,7 @@ VERBOSE = false;
 ELITISM = false;        %TODO:?
 NUM_ITERATION = 100;
 NUM_TRIES = 20;
-NUM_GENE = 32;          % dependent on network topology
+NUM_GENE = 16;          % dependent on network topology
 TARGET = NUM_GENE;          % target: simulation runs for 1000 time steps
 
 CONSTRAINTS.objectiveFunctions = {@GetLeadingZeros, @GetTrailingOnes};
