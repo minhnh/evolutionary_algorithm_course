@@ -12,10 +12,10 @@ end
 for nObj = 1:numObjectives
     sortedFront =  sortByObjective(population(currentFront), obj.Constraints.objectiveNames{nObj});
     [sortedFront(1).dist, sortedFront(frontSize).dist] = deal(inf);
-    
+    fitObjID = obj.Constraints.objectiveNames{nObj};
     for j = 2:frontSize-1
         sortedFront(j).dist = population(j).dist +...
-            (sortedFront(j-1).fitness + sortedFront(j+1).fitness)/maxFitIdeal;
+            (sortedFront(j-1).(fitObjID) - sortedFront(j+1).(fitObjID))/maxFitIdeal;
     end
     for k = 1:frontSize
         genomesWithRanks(currentFront(k)).dist = sortedFront(k).dist;

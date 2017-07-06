@@ -2,17 +2,16 @@ function winners = SelectWinners(obj, selection_size)
 %SELECTWINNERS Summary of this function goes here
 %   Detailed explanation goes here
 offsprings = NSGAII.CalculateObjectives(obj.Population, obj.Constraints.objectiveNames,...
-                                        obj.Constraints.objectiveFunctions);
+    obj.Constraints.objectiveFunctions);
 winners = obj.Population;
 if isfield(obj.Constraints, 'oldPopulation')
     [fronts, genomesWithRanks] = NSGAII.DominationSort([offsprings; obj.Constraints.oldPopulation],...
-                                                       obj.Constraints.objectiveNames);
-    Visualization.VisualizeFronts2D(genomesWithRanks, fronts, obj.Constraints.objectiveNames);
-    Visualization.gif;
-    winID = 1;
+        obj.Constraints.objectiveNames);
+    winID = 1; selectedIDs = []; rejectedIDs = []; rejFrontID = 2;
     for j = 1:length(fronts)
         currentFront = fronts{j};
-        while (winID + length(currentFront) <= selection_size)
+        if (winID + length(currentFront) <= selection_size)
+            selectedIDs{j} = currentFront;
             for i = 1:length(currentFront)
                 winners(winID).Genome = genomesWithRanks(currentFront(i)).Genome;
                 winners(winID).numLeadingZeros = genomesWithRanks(currentFront(i)).numLeadingZeros;
@@ -20,22 +19,27 @@ if isfield(obj.Constraints, 'oldPopulation')
                 winners(winID).fitness = genomesWithRanks(currentFront(i)).fitness;
                 winID = winID + 1;
             end
-        end
-        genomesWithRanks = crowdingDistance(obj, currentFront, genomesWithRanks);
-        % Sorting based on partial order
-        currentFront =  partialOrderSort(currentFront, genomesWithRanks);
-        
-        % Append best from current front to winners until filled
-        if winID < selection_size
-            for addRestID = 1 : selection_size - (winID - 1)
+        elseif winID-1 < selection_size
+            genomesWithRanks = crowdingDistance(obj, currentFront, genomesWithRanks);
+            % Sorting based on partial order
+            currentFront =  partialOrderSort(currentFront, genomesWithRanks);
+            % Append best from current front to winners until filled
+            num2Fill = selection_size - (winID - 1);
+            selectedIDs{j} = currentFront(1:num2Fill);
+            rejectedIDs{1} = currentFront(num2Fill+1:end);
+            for addRestID = 1 : num2Fill
                 winners(winID).Genome = genomesWithRanks(currentFront(addRestID)).Genome;
                 winners(winID).numLeadingZeros = genomesWithRanks(currentFront(addRestID)).numLeadingZeros;
                 winners(winID).numTrailingOnes = genomesWithRanks(currentFront(addRestID)).numTrailingOnes;
                 winners(winID).fitness = genomesWithRanks(currentFront(addRestID)).fitness;
                 winID = winID + 1;
             end
+        else
+            rejectedIDs{rejFrontID} = currentFront; rejFrontID = rejFrontID + 1;
         end
     end
+    Visualization.VisualizeFronts2D(genomesWithRanks, fronts, selectedIDs, rejectedIDs, obj.Constraints.objectiveNames);
+    Visualization.gif;
 else
     obj.Constraints.oldPopulation = obj.Population;
 end
