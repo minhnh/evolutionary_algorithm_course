@@ -5,7 +5,8 @@ offsprings = NSGAII.CalculateObjectives(obj.Population, obj.Constraints.objectiv
                                         obj.Constraints.objectiveFunctions);
 winners = obj.Population;
 if isfield(obj.Constraints, 'oldPopulation')
-    [ fronts, genomesWithRanks ] = NSGAII.DominationSort( [offsprings; obj.Constraints.oldPopulation] );
+    [fronts, genomesWithRanks] = NSGAII.DominationSort([offsprings; obj.Constraints.oldPopulation],...
+                                                       obj.Constraints.objectiveNames);
     Visualization.VisualizeFronts2D(genomesWithRanks, fronts, obj.Constraints.objectiveNames);
     Visualization.gif;
     winID = 1;

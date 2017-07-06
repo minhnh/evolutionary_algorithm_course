@@ -25,7 +25,7 @@ ie = GeneticEncoding.ValueEncoding(POPULATION_SIZE, NUM_GENE, TARGET, CONSTRAINT
                                    VERBOSE);
 fig = figure(1);
 axis([0 16 0 16]);
-Visualization.gif('front_evolution.gif', 'frame', fig);
+Visualization.gif('front_evolution.gif', 'frame', fig, 'DelayTime', 0.2);
 Visualization.SetupPlot('Front evolutions', 'Number of leading zeros', 'number of trailing ones', 24, []);
 
 % set(gcf, 'position', [0 0 1.5 1.5]);

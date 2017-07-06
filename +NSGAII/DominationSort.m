@@ -1,7 +1,12 @@
-function [ fronts, genomesWithRanks ] = DominationSort( genomes )
+function [ fronts, genomesWithRanks ] = DominationSort( genomes, objectiveNames )
 %DOMINATIONSORT Summary of this function goes here
 %   Detailed explanation goes here
 numGenome = length(genomes);
+numObjective = length(objectiveNames);
+objectiveFitness = zeros(numGenome, numObjective);
+for i = 1:numObjective
+    objectiveFitness(:, i) = extractfield(genomes, objectiveNames{i});
+end
 
 genomesWithRanks = genomes;
 bestFront = [];
@@ -9,9 +14,12 @@ for p = 1:numGenome
     lestFitSet = [];
     moreFitCount = 0;
     for q = 1:numGenome
-        if genomesWithRanks(p).fitness > genomesWithRanks(q).fitness
+        if p == q
+            continue;
+        end
+        if IsDominant(p, q, objectiveFitness)
             lestFitSet = [lestFitSet, q];
-        elseif genomesWithRanks(p).fitness < genomesWithRanks(q).fitness
+        elseif IsDominant(q, p, objectiveFitness)
             moreFitCount = moreFitCount + 1;
         end
     end
@@ -43,5 +51,24 @@ while ~isempty(currentFront)
     fronts = [fronts; nextFront];
 end
 
+end
+
+function isDominant = IsDominant(firstIndex, secondIndex, objectiveFitness)
+    firstFitnessVect = objectiveFitness(firstIndex, :);
+    secondFitnessVect = objectiveFitness(secondIndex, :);
+    isDominant = false;
+    for firstFitness = objectiveFitness(firstIndex, :)
+        for secondFitness = objectiveFitness(secondIndex, :)
+            if firstFitness < secondFitness
+                isDominant = false;
+                return;
+            end
+            if firstFitness > secondFitness
+                isDominant = true;
+            end
+        end
+    end
+%     isDominant = all(objectiveFitness(firstIndex, :) >= objectiveFitness(secondIndex, :))...
+%                  && any(objectiveFitness(firstIndex, :) > objectiveFitness(secondIndex, :));
 end
 
