@@ -5,14 +5,11 @@ function populationWithObjectives = CalculateObjectives(population, objectiveNam
 numObjective = length(objectiveFunctions);
 populationWithObjectives = population;
 for i = 1:length(population)
-    fitness = 0;
     for j = 1:numObjective
         objectiveFunc = objectiveFunctions{j};
         objectiveFitness = objectiveFunc(population(i).Genome);
         populationWithObjectives(i).(objectiveNames{j}) = objectiveFitness;
-        fitness = fitness + objectiveFitness;
     end
-    populationWithObjectives(i).fitness = fitness;
 end
 
 end

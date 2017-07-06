@@ -9,30 +9,28 @@ if isfield(obj.Constraints, 'oldPopulation')
                                                        obj.Constraints.objectiveNames);
     Visualization.VisualizeFronts2D(genomesWithRanks, fronts, obj.Constraints.objectiveNames);
     Visualization.gif;
-    winID = 1;
+    winIndex = 1;
+    selectedIndices = zeros(selection_size);
     for j = 1:length(fronts)
         currentFront = fronts{j};
-        while (winID + length(currentFront) <= selection_size)
+        while (winIndex + length(currentFront) <= selection_size)
             for i = 1:length(currentFront)
-                winners(winID).Genome = genomesWithRanks(currentFront(i)).Genome;
-                winners(winID).numLeadingZeros = genomesWithRanks(currentFront(i)).numLeadingZeros;
-                winners(winID).numTrailingOnes = genomesWithRanks(currentFront(i)).numTrailingOnes;
-                winners(winID).fitness = genomesWithRanks(currentFront(i)).fitness;
-                winID = winID + 1;
+                winners(winIndex).Genome = genomesWithRanks(currentFront(i)).Genome;
+                selectedIndices(winIndex) = currentFront(i);
+                winIndex = winIndex + 1;
             end
         end
-        genomesWithRanks = crowdingDistance(obj, currentFront, genomesWithRanks);
+        genomesWithRanks = crowdingDistance(genomesWithRanks, currentFront,...
+                                            obj.Constraints.objectiveNames);
         % Sorting based on partial order
-        currentFront =  partialOrderSort(currentFront, genomesWithRanks);
+        currentFront = partialOrderSort(currentFront, genomesWithRanks);
         
         % Append best from current front to winners until filled
-        if winID < selection_size
-            for addRestID = 1 : selection_size - (winID - 1)
-                winners(winID).Genome = genomesWithRanks(currentFront(addRestID)).Genome;
-                winners(winID).numLeadingZeros = genomesWithRanks(currentFront(addRestID)).numLeadingZeros;
-                winners(winID).numTrailingOnes = genomesWithRanks(currentFront(addRestID)).numTrailingOnes;
-                winners(winID).fitness = genomesWithRanks(currentFront(addRestID)).fitness;
-                winID = winID + 1;
+        if winIndex < selection_size
+            for addRestID = 1 : selection_size - (winIndex - 1)
+                selectedIndices(winIndex) = currentFront(addRestID);
+                winners(winIndex).Genome = genomesWithRanks(currentFront(addRestID)).Genome;
+                winIndex = winIndex + 1;
             end
         end
     end

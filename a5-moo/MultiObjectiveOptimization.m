@@ -8,7 +8,7 @@ VERBOSE = false;
 ELITISM = false;        %TODO:?
 NUM_ITERATION = 100;
 NUM_TRIES = 20;
-NUM_GENE = 16;          % dependent on network topology
+NUM_GENE = 32;          % dependent on network topology
 TARGET = NUM_GENE;          % target: simulation runs for 1000 time steps
 
 CONSTRAINTS.objectiveFunctions = {@GetLeadingZeros, @GetTrailingOnes};
@@ -18,13 +18,12 @@ CONSTRAINTS.getGenome = @GetGenome;
 CROSSOVER_PARAMS.funcSingleCrossover = @GeneticEncoding.BinaryOperators.CrossoverSinglePoint;
 CROSSOVER_PARAMS.Rate = 0.05;
 MUTATION_RATE = 0.01;
-% i.e: MUTATION.ProbabilityAddNode = 0.03;
 ie = GeneticEncoding.ValueEncoding(POPULATION_SIZE, NUM_GENE, TARGET, CONSTRAINTS,...
                                    @NSGAII.GeneratePopulation, @GetFitness,...
                                    @SelectWinners, @Crossover, @Mutate, @CheckConvergence,...
                                    VERBOSE);
 fig = figure(1);
-axis([0 16 0 16]);
+axis([0 NUM_GENE 0 NUM_GENE]);
 Visualization.gif('front_evolution.gif', 'frame', fig, 'DelayTime', 0.2);
 Visualization.SetupPlot('Front evolutions', 'Number of leading zeros', 'number of trailing ones', 24, []);
 
