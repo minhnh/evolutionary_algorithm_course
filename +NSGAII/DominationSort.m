@@ -14,9 +14,6 @@ for p = 1:numGenome
     lestFitSet = [];
     moreFitCount = 0;
     for q = 1:numGenome
-        if p == q
-            continue;
-        end
         if IsDominant(p, q, objectiveFitness)
             lestFitSet = [lestFitSet, q];
         elseif IsDominant(q, p, objectiveFitness)
@@ -31,7 +28,7 @@ for p = 1:numGenome
     genomesWithRanks(p).moreFitCount = moreFitCount;
 end
 
-fronts = {bestFront};
+fronts = {};
 i = 1;
 currentFront = bestFront;
 while ~isempty(currentFront)
@@ -47,28 +44,15 @@ while ~isempty(currentFront)
         end
     end
     i = i + 1;
+    fronts = [fronts; currentFront];
     currentFront = nextFront;
-    fronts = [fronts; nextFront];
 end
 
 end
 
 function isDominant = IsDominant(firstIndex, secondIndex, objectiveFitness)
-    firstFitnessVect = objectiveFitness(firstIndex, :);
-    secondFitnessVect = objectiveFitness(secondIndex, :);
-    isDominant = false;
-    for firstFitness = objectiveFitness(firstIndex, :)
-        for secondFitness = objectiveFitness(secondIndex, :)
-            if firstFitness < secondFitness
-                isDominant = false;
-                return;
-            end
-            if firstFitness > secondFitness
-                isDominant = true;
-            end
-        end
-    end
-%     isDominant = all(objectiveFitness(firstIndex, :) >= objectiveFitness(secondIndex, :))...
-%                  && any(objectiveFitness(firstIndex, :) > objectiveFitness(secondIndex, :));
+    firstFitness = objectiveFitness(firstIndex, :);
+    secondFitness = objectiveFitness(secondIndex, :);
+    isDominant = any(firstFitness > secondFitness) && all(firstFitness >= secondFitness);
 end
 
