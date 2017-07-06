@@ -1,6 +1,5 @@
 function fitness = GetFitness(genomes, ~, constraints)
-%GETFITNESS Summary of this function goes here
-%   Detailed explanation goes here
+%GETFITNESS sum all objective fitness to get the final fitness
     numGenome = length(genomes);
     fitness = zeros(numGenome, 1);
     for i = 1:numGenome

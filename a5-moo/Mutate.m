@@ -1,6 +1,6 @@
 function children = Mutate(~, children, mutationRate)
-%MUTATE Summary of this function goes here
-%   Detailed explanation goes here
+%MUTATE Mutate genomes using GeneticEncoding.BinaryOperators.Mutate
+%   @param mutationRate: probability of a binary gene to invert
 numGene = length(children(1).Genome);
 numGenome = length(children);
 genomes = reshape(extractfield(children, 'Genome'), numGene, numGenome)';

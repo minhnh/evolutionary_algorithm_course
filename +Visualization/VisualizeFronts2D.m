@@ -1,8 +1,17 @@
 function VisualizeFronts2D(genomes, fronts, selectedIndices, objectiveNames)
-%VISUALIZEFRONTS2D Summary of this function goes here
-%   Detailed explanation goes here
+%VISUALIZEFRONTS2D Draw NSGA-II fronts and selected/discarded individuals for
+%problem with 2 objectives.
+%   @param genomes:         vector of structs containing previous population and offsprings.
+%                           Each struct must contain fields listed in objectiveNames.
+%   @param fronts:          cell array of vectors. Each vector contains indices in vector genomes of
+%                           individuals for each fronts.
+%   @param selectedIndices: indices in genomes of selected individuals for next
+%                           generation
+%   @param objectiveNames:  field names of objective fitness stored in each individual
 assert(length(objectiveNames) == 2, 'VisualizeFronts2D only work for 2 objectives');
+
 cla; hold on; gcf;
+
 objectiveFitness1 = extractfield(genomes, objectiveNames{1});
 objectiveFitness2 = extractfield(genomes, objectiveNames{2});
 for frontIndex = 1:length(fronts)

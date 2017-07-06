@@ -1,6 +1,8 @@
 function [ fronts, genomesWithRanks ] = DominationSort( genomes, objectiveNames )
-%DOMINATIONSORT Summary of this function goes here
-%   Detailed explanation goes here
+%DOMINATIONSORT Sort genomes using the domination sort algorithm
+%   @param genomes:         vector of structs containing previous population and offsprings.
+%                           Each struct must contain fields listed in objectiveNames.
+%   @param objectiveNames:  field names of objective fitness stored in each individual
 numGenome = length(genomes);
 numObjective = length(objectiveNames);
 objectiveFitness = zeros(numGenome, numObjective);

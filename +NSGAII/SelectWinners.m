@@ -1,6 +1,6 @@
 function winners = SelectWinners(obj, selection_size)
-%SELECTWINNERS Summary of this function goes here
-%   Detailed explanation goes here
+%SELECTWINNERS Select best individuals from the previous crossover and mutation,
+%using the NSGA-II algorithm.
 offsprings = NSGAII.CalculateObjectives(obj.Population, obj.Constraints.objectiveNames,...
                                         obj.Constraints.objectiveFunctions);
 winners = offsprings;
