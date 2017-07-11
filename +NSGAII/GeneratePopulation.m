@@ -18,8 +18,7 @@ population = repmat(struct(), populationSize, 1);
 for i = 1:populationSize
     population(i).Genome = constraints.getGenome(numGene);
 end
-population = NSGAII.CalculateObjectives(population, constraints.objectiveNames,...
-                                        constraints.objectiveFunctions);
+population = NSGAII.CalculateObjectives(population, obj.Constraints);
 
 set(obj, 'Population', population);
 

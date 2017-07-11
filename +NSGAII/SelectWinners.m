@@ -1,8 +1,7 @@
 function winners = SelectWinners(obj, selection_size)
 %SELECTWINNERS Select best individuals from the previous crossover and mutation,
 %using the NSGA-II algorithm.
-offsprings = NSGAII.CalculateObjectives(obj.Population, obj.Constraints.objectiveNames,...
-                                        obj.Constraints.objectiveFunctions);
+offsprings = NSGAII.CalculateObjectives(obj.Population, obj.Constraints);
 winners = offsprings;
 if isfield(obj.Constraints, 'oldPopulation')
     [fronts, genomesWithRanks] = NSGAII.DominationSort([offsprings; obj.Constraints.oldPopulation],...

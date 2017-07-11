@@ -3,10 +3,10 @@
 % Date:     2017-07-06
 %%
 clear;clc;clf;
-POPULATION_SIZE = 100;
+POPULATION_SIZE = 50;
 VERBOSE = false;
 ELITISM = false;        % built into NSGA-II
-NUM_ITERATION = 200;
+NUM_ITERATION = 100;
 NUM_TRIES = 20;
 NUM_GENE = 32;          % number of bits in each genome
 TARGET = NUM_GENE;      % target: sum of leading and trailing zeros = NUM_GENE
@@ -42,7 +42,7 @@ function genome = GetGenome(numGene)
 genome = randi([0, 1], 1, numGene);
 end
 
-function numLeadingZeros = GetLeadingZeros(genome)
+function numLeadingZeros = GetLeadingZeros(genome, constraints)
 firstOnePos = find(genome, 1, 'first');
 if isempty(firstOnePos)
     numLeadingZeros = length(genome);
@@ -51,7 +51,7 @@ else
 end
 end
 
-function numTrailingOnes = GetTrailingOnes(genome)
+function numTrailingOnes = GetTrailingOnes(genome, constraints)
 lastZeroPos = find(~genome, 1, 'last');
 if isempty(lastZeroPos)
     numTrailingOnes = 16;
